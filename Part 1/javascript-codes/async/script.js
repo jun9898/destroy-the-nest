@@ -1,7 +1,7 @@
 function fetchData() {
     return new Promise((resolve, reject) => {
         // 비동기 요청 
-        const success = false;
+        const success = true;
         if (success) {
             resolve('성공');
         } else {
@@ -18,18 +18,18 @@ fetchData()
         console.error(error);
     })
 
-// fetch('http://jsonplaceholder.typicode.com/todos/1')
-//     .then(response1 => response1.json())
-//     .then(json1 => console.log(json1))
-//     .then(() => fetch('http://ㅈㄷㄹㅈㄷㄹㅈㄷㄹㄷㅈjsonplaceholder.typicode.com/todos/2'))
-//     .then(response2 => response2.json())
-//     .then(json2 => console.log(json2))
-//     .catch((error) => {
-//         console.error(error);
-//     })
-//     .finally(() => {
-//         console.log('작업 끝!')
-//     })
+fetch('http://jsonplaceholder.typicode.com/todos/1')
+    .then(response1 => response1.json())
+    .then(json1 => console.log(json1))
+    .then(() => fetch('http://error-test-jsonplaceholder.typicode.com/todos/2'))
+    .then(response2 => response2.json())
+    .then(json2 => console.log(json2))
+    .catch((error) => {
+        console.error(error);
+    })
+    .finally(() => {
+        console.log('작업 끝!')
+    })
 
 async function makeRequests() {
     try {
@@ -45,19 +45,19 @@ async function makeRequests() {
 
 makeRequests();
 
-await function B() {
-    setTimeout(() => {
-        console.log('B-1...');
-    }, 1500);
-}
+// await function B() {
+//     setTimeout(() => {
+//         console.log('B-1...');
+//     }, 1500);
+// }
 
-async function A() {
-    console.log('A-1...');
-    B();
-    console.log('A-2...');
-}
-
-A();
+// async function A() {
+//     console.log('A-1...');
+//     B();
+//     console.log('A-2...');
+// }
+//
+// A();
 
 
 // Browser Object Model  (BOM)
