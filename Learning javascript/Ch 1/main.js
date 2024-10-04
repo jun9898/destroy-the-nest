@@ -143,25 +143,60 @@
 // // 이런 기능은 왜 있는거야
 // console.log(u.getFullName.call(jbj));
 
-const timer = {
-    title : "TIMER!",
-    timeout : function () {
-        console.log(this.title)
-        // 쉽게 이해하자면 한댑스만 더 들어가도 this가 undefined 되버리는것같음
-        // setTimeout(function () {
-        //     console.log(this.title)
-        // }, 1000)
-        // 안전하게 가려면 화살표 함수를 사용하는게 좋을듯 함
-        // setTimeout(() => {
-        //     console.log(this.title)
-        // }, 1000)
-        // 궁금증 발생! 만약 한댑스를 더 들어가버려도 화살표함수로 설정해준 this는 유효할까?
-        setTimeout(() => {
-            setTimeout(() => {
-                console.log(this.title)
-            }, 1000)
-        }, 1000)
-        // 유효함
-    }
-}
-timer.timeout()
+// const timer = {
+//     title : "TIMER!",
+//     timeout : function () {
+//         console.log(this.title)
+//         // 쉽게 이해하자면 한댑스만 더 들어가도 this가 undefined 되버리는것같음
+//         // setTimeout(function () {
+//         //     console.log(this.title)
+//         // }, 1000)
+//         // 안전하게 가려면 화살표 함수를 사용하는게 좋을듯 함
+//         // setTimeout(() => {
+//         //     console.log(this.title)
+//         // }, 1000)
+//         // 궁금증 발생! 만약 한댑스를 더 들어가버려도 화살표함수로 설정해준 this는 유효할까?
+//         setTimeout(() => {
+//             setTimeout(() => {
+//                 console.log(this.title)
+//             }, 1000)
+//         }, 1000)
+//         // 유효함
+//     }
+// }
+// timer.timeout()
+
+// java의 람다 함수와 비슷한듯
+// const arr = [1,2,3,4]
+// const isValid = arr.every(item => item < 5)
+// const filterNumbers = arr.filter(item => item < 3)
+//
+// console.log(isValid)
+// console.log(filterNumbers)
+//
+// const user = [
+//     {name : "bj", age : 11},
+//     {name : "j", age : 19},
+//     {name : "jeon", age : 30}
+// ]
+//
+// const adults = user.filter(item => item.age >= 19)
+// console.log(adults)
+
+// const arr = [1,2,[3,[4]]]
+// console.log(arr.flat(2))
+
+// const parent = document.querySelector(".parent")
+//
+// console.log(parent.childNodes)
+//
+// console.log(parent.children)
+//
+// console.dir(parent)
+//
+
+const el = document.getElementById("child2")
+console.log(el)
+
+
+
