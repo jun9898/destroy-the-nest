@@ -37,6 +37,7 @@ app.use(passport.session());
 
 require('./config/passport');
 const {maxAge} = require("express-session/session/cookie");
+const {checkAuthenticated, checkNotAuthenticated} = require("./middlewares/auth");
 
 app.use('/static', express.static(path.join(__dirname, 'public')));
 
@@ -48,14 +49,12 @@ mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.log(err));
 
-app.get('/login', (req, res) => {
+app.get('/login', checkNotAuthenticated, (req, res) => {
     res.render('login');
 });
 
 app.post('/login', (req, res, next) => {
-    console.log(req.body);
     passport.authenticate('local', (err, user, info) => {
-        console.log('user = ', user);
         if (err) {
             return next(err);
         }
@@ -74,6 +73,13 @@ app.post('/login', (req, res, next) => {
     })(req, res, next);
 });
 
+app.get('/auth/google', passport.authenticate('google'));
+
+app.get('/auth/google/callback', passport.authenticate('google', {
+    successReturnToOrRedirect: '/',
+    failureRedirect: '/login'
+}));
+
 app.get('/signup', (req, res) => {
     res.render('signup');
 });
@@ -90,7 +96,14 @@ app.post('/signup', async (req, res) => {
         .catch(err => console.log(err));
 });
 
-app.get('/' , (req, res) => {
+app.post('/logout', (req, res, next) => {
+    req.logOut(function (err) {
+        if (err) { return next(err); }
+    });
+    res.redirect('/');
+});
+
+app.get('/', checkAuthenticated, (req, res) => {
     res.render('index');
 })
 
