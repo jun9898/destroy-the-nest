@@ -84,10 +84,10 @@ app.get('/signup', (req, res) => {
     res.render('signup');
 });
 
-app.post('/signup', async (req, res) => {
+app.post('/signup', (req, res) => {
     const user = new User(req.body);
     console.log(user);
-    await user.save()
+    user.save()
         .then(() => {
             res.status(200).json({
                 success : true

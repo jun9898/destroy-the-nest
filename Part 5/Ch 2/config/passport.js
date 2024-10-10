@@ -58,7 +58,7 @@ const googleStrategyConfig = new GoogleStrategy({
             } else {
                 console.log("profile.emails[0].value = ", profile.emails[0].value)
                 const user = new User({googleId: profile.id, email: profile.emails[0].value})
-                console.log(user)
+                console.log("user = ", user)
                 user.save()
                     .then(user => done(null, user))
                     .catch(err => done(err));
