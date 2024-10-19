@@ -90,6 +90,23 @@ loginForm.addEventListener('submit', (e) => {
     username.value = '';
 })
 
+socket.on('user-away', (userID) => {
+    const to = title.getAttribute('userID');
+    if (to === userID) {
+        title.innerHTML = '&nbsp;';
+        msgDiv.classList.add('d-none');
+        messages.classList.add('d-none');
+    }
+});
+
+const appendMessage = ({ message, time, background, position }) => {
+    let div = document.createElement('div');
+    div.classList.add('message', 'bg-opacity-25', 'm-2', 'px-2', 'py-1', background, position);
+    div.innerHTML = `<span class="msg-text">${message}</span> <span class="msg-time">${time}</span>`
+    messages.append(div);
+    messages.scrollTo(0, messages.scrollHeight);
+}
+
 const setActiveUser = (elem, username, userID) => {
     title.innerHTML = username;
     title.setAttribute('userID', userID);
@@ -127,4 +144,39 @@ msgForm.addEventListener('submit', (e) => {
         time: time
     }
 
+    socket.emit('message-to-server', payload);
+
+    appendMessage({ ...payload, background: "bg-success", position: "right" });
+
+    message.value = '';
+    message.focus();
 })
+
+socket.on('message-to-client', ({ from, message, time }) => {
+    const receiver = title.getAttribute('userID');
+    const notify = document.getElementById(from);
+
+    if (receiver === null) {
+        notify.classList.remove('d-none');
+    } else if (receiver === from) {
+        appendMessage({ message, time, background: "bg-primary", position: "left" });
+    } else {
+        notify.classList.remove('d-none');
+    }
+})
+
+socket.on('stored-messages', ({ messages }) => {
+    if (messages.length > 0) {
+        messages.forEach(msg => {
+            let payload = {
+                message: msg.message,
+                time: msg.time
+            }
+            if (msg.from === socket.id) {
+                appendMessage({ ...payload, background: "bg-success", position: "right" });
+            } else {
+                appendMessage({ ...payload, background: "bg-primary", position: "left" });
+            }
+        });
+    }
+});

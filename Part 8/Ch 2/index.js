@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 require('dotenv').config()
 const MONGO_URL = process.env.MONGO_URL
 const sessionRouter = require('./src/routes/session.routes');
+const {saveMessage, fetchMessages} = require("./src/utils/messages");
 const PORT = 4000;
 
 mongoose.set('strictQuery', false);
@@ -44,17 +45,20 @@ io.on("connection", async socket => {
 
     io.emit("users-data", { users });
 
-    socket.on('message-to-server', (message) => {
-        // 메시지 처리 로직
+    socket.on('message-to-server', (payload) => {
+        io.to(payload.to).emit('message-to-client', payload);
+        saveMessage(payload);
     });
 
-    socket.on('fetch-messages', () => {
+    socket.on('fetch-messages', ({ receiver }) => {
         // 메시지 가져오기 로직
+        fetchMessages(io, socket.id, receiver);
     });
 
     socket.on('disconnect', () => {
         users = users.filter(user => user.userID !== socket.id);
         io.emit("users-data", { users });
+        io.emit("user-away", socket.id);
     });
 });
 
