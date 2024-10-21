@@ -9,6 +9,16 @@ const commentSchema = mongoose.Schema({
         },
         username: String
     }
-}, {timestamp: true});
+}, {timestamps: true});
+
+commentSchema.statics.toEntity = function(req) {
+    return {
+        text: req.body.text,
+        author: {
+            id: req.user._id,
+            username: req.user.username
+        }
+    };
+};
 
 module.exports = mongoose.model('Comment', commentSchema);
