@@ -47,7 +47,7 @@ router.put('/:commentId', checkCommentOwnership, (req, res) => {
         })
         .catch(err => {
             req.flash('error', 'Comment not found');
-            res.redirect('back')
+            res.redirect(req.get('Referrer') || '/')
         })
 });
 

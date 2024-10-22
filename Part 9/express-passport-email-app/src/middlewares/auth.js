@@ -1,4 +1,5 @@
 const Post = require('../models/posts.model');
+const User = require('../models/users.model');
 const Comment = require('../models/comments.model');
 
 
@@ -59,9 +60,31 @@ function checkCommentOwnership(req, res, next) {
     }
 }
 
+function checkIsMe(req, res, next) {
+    if (req.isAuthenticated()) {
+        User.findById(req.params.id)
+            .then(user => {
+                if (user._id.equals(req.user._id)) {
+                    next();
+                } else {
+                    req.flash('error', 'Permission denied');
+                    res.redirect(req.get('Referrer') || '/')
+                }
+            })
+            .catch(err => {
+                req.flash('error', 'User not found');
+                res.redirect(req.get('Referrer') || '/')
+            });
+    } else {
+        req.flash('error', 'Please Login first!');
+        res.redirect('/login')
+    }
+}
+
 module.exports = {
     checkAuthenticated,
     checkNotAuthenticated,
     checkPostOwnership,
-    checkCommentOwnership
+    checkCommentOwnership,
+    checkIsMe
 }
