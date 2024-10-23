@@ -13,9 +13,7 @@ function checkNotAuthenticated(req, res, next) {
 }
 
 function checkAdmin(req, res, next) {
-    console.log(req.locals.currentUser.admin)
-
-    if (req.isAuthenticated() && req.locals.currentUser.admin === true) {
+    if (req.isAuthenticated() && res.locals.currentUser.admin === true) {
         next();
     } else {
         req.flash('error', 'You are not authorized to view this page');

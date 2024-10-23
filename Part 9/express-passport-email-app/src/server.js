@@ -50,15 +50,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride('_method'));
 app.use(flash())
 
-app.get('/send', (req, res) => {
-    req.flash('post success', '포스트가 생성되었습니다.')
-    res.send('message sent')
-})
-
-app.get('/receive', (req, res) => {
-    res.send(req.flash('post success')[0]);
-})
-
 app.use(passport.initialize());
 app.use(passport.session());
 

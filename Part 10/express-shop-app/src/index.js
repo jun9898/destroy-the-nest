@@ -10,6 +10,8 @@ const cookieConfig = config.get('cookie')
 const flash = require('connect-flash');
 require('dotenv').config();
 require('./config/passport');
+const methodOverride = require('method-override');
+const fileUpload = require('express-fileupload');
 
 const mainRouter = require("./routes/main.router");
 const usersRouter = require("./routes/users.router");
@@ -46,6 +48,11 @@ app.use(function(request, response, next) {
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(flash());
+app.use(methodOverride("_method"));
+app.use(fileUpload());
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use((req, res, next) => {
     res.locals.cart = req.session.cart;
@@ -55,9 +62,6 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(passport.initialize());
-app.use(passport.session());
-
 app.use('/static', express.static(path.join(__dirname, 'public')));
 
 app.use('/', mainRouter);
@@ -66,6 +70,12 @@ app.use('/admin/categories', adminCategoriesRouter);
 app.use('/admin/products', adminProductsRouter);
 app.use('/products', productsRouter);
 app.use('/cart', cartRouter);
+
+app.use((err, req, res, next) => {
+    console.error(err.status);
+    res.status(err.status || 500);
+    res.send(err.message || 'Something broke!');
+})
 
 mongoose.set('strictQuery', false);
 mongoose.connect(process.env.MONGO_URI)

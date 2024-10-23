@@ -30,7 +30,6 @@ const logout = (req, res, next) => {
 
 const localSignup = (req, res) => {
     const user = new User(req.body);
-    console.log(user);
     user.save()
         .then(() => {
             // sendMail("nice1998@gmail.com", "byeong jun", "welcome");
