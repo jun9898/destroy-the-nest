@@ -1,27 +1,28 @@
 const express = require('express');
 const passport = require("passport");
-const User = require("../models/users.model");
 const {localLogin, logout, localSignup} = require("../controller/user.controller");
 const usersRouter = express.Router();
 
-// local auth
+// 로컬 인증
 usersRouter.post('/login', localLogin);
 usersRouter.post('/signup', localSignup);
 
-// google auth
-usersRouter.get('/google', passport.authenticate('google'));
-usersRouter.get('/google/callback', passport.authenticate('google', {
-    successReturnToOrRedirect: '/products',
-    failureRedirect: '/login'
-}));
+// 소셜 인증 라우트 설정을 위한 함수
+function setupSocialAuthRoute(provider, successRedirect, failureRedirect) {
+    usersRouter.get(`/${provider}`, passport.authenticate(provider));
+    usersRouter.get(`/${provider}/callback`, passport.authenticate(provider, {
+        successReturnToOrRedirect: successRedirect,
+        failureRedirect: failureRedirect
+    }));
+}
 
-// Kakao auth
-usersRouter.get('/kakao', passport.authenticate('kakao'));
-usersRouter.get('/kakao/callback', passport.authenticate('kakao', {
-    successReturnToOrRedirect: '/',
-    failureRedirect: '/login'
-}));
+// 구글 인증
+setupSocialAuthRoute('google', '/products', '/login');
 
+// 카카오 인증
+setupSocialAuthRoute('kakao', '/', '/login');
+
+// 로그아웃
 usersRouter.post('/logout', logout);
 
 module.exports = usersRouter;

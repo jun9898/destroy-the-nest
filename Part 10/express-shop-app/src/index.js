@@ -12,6 +12,7 @@ require('dotenv').config();
 require('./config/passport');
 const methodOverride = require('method-override');
 const fileUpload = require('express-fileupload');
+const session = require('express-session');
 
 const mainRouter = require("./routes/main.router");
 const usersRouter = require("./routes/users.router");
@@ -23,13 +24,25 @@ const adminProductsRouter = require("./routes/admin-products.router");
 app.set("views", path.join(__dirname, "views"));
 app.set('view engine', 'ejs');
 
-app.use(
-    cookieSession({
-        name: 'cookie-session-name',
+// app.use(
+//     cookieSession({
+//         name: 'cookie-session-name',
+//         maxAge: cookieConfig.expiresIn,
+//         keys: [process.env.COOKIE_KEY]
+//     })
+// );
+
+app.use(session({
+    secret: process.env.COOKIE_KEY,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
         maxAge: cookieConfig.expiresIn,
-        keys: [process.env.COOKIE_KEY]
-    })
-);
+        httpOnly: true,
+        secure: false
+    },
+    name: 'shop-app-cookie'
+}));
 
 app.use(function(request, response, next) {
     if (request.session && !request.session.regenerate) {
@@ -62,7 +75,7 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/static', express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', mainRouter);
 app.use('/auth', usersRouter);
