@@ -3,6 +3,7 @@ import {UserService} from "../routes/user/user.service";
 import {compare} from 'bcrypt';
 import {User} from "../entities/user.entity";
 import {JwtService} from "@nestjs/jwt";
+import {JwtPayload} from "jsonwebtoken";
 
 @Injectable()
 export class AuthService {
@@ -27,9 +28,12 @@ export class AuthService {
     async login(user: User) {
 
         const payload = {
+            id: user.id,
             username: user.username,
             name: user.name,
         };
+
+        console.log(payload);
 
         return {
             accessToken: this.jwtService.sign(payload, {expiresIn: '1d'}),

@@ -1,5 +1,6 @@
-import {Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {Board} from "./board.entity";
+import {Exclude} from "class-transformer";
 
 @Entity({name: 'user'})
 export class User {
@@ -10,6 +11,7 @@ export class User {
     username: string;
 
     @Column()
+    @Exclude()
     password: string;
 
     @Column()

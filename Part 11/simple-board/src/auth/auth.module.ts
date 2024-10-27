@@ -9,7 +9,7 @@ import {JwtModule} from "@nestjs/jwt";
 import {config} from "dotenv";
 import * as process from "node:process";
 import {JwtStrategy} from "./jwt-strategy";
-config({path: '.env.local'});
+config({path: '.env.development'});
 
 @Module({
   imports: [

@@ -29,7 +29,7 @@ export class UserService {
         return await this.userRepository.findOneBy({username});
     }
 
-    async getUsers(id: number) {
+    async getUsers() {
         const qb = this.userRepository.createQueryBuilder();
 
         qb.addSelect((subQuery) => {
